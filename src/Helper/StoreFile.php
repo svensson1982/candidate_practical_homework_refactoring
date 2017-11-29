@@ -4,9 +4,8 @@ namespace Language\Helper;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-Class StoreFile
+class StoreFile
 {
-
     use Constant;
 
     private $log;

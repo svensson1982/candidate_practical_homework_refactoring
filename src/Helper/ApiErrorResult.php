@@ -6,8 +6,9 @@ use Monolog\Handler\StreamHandler;
 
 class ApiErrorResult
 {
-
-
+    /**
+     * ApiErrorResult constructor.
+     */
     public function __construct()
     {
         //logger

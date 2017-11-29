@@ -7,14 +7,16 @@ use Language\ApiCall;
 use Monolog\Handler\StreamHandler;
 use Language\Helper\ApiErrorResult;
 
-Class LanguageApi
+class LanguageApi
 {
-
     use Constant;
 
     private $apiError;
     private $apiCallInstance;
 
+    /**
+     * LanguageApi constructor.
+     */
     public function __construct()
     {
         $reflection = new ReflectionClass(ApiCall::class);

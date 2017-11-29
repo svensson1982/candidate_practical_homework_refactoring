@@ -4,6 +4,7 @@ namespace Language;
 use Monolog\Logger;
 use Language\Config;
 use Language\Helper\Storage;
+use Language\Helper\Constant;
 use Language\Helper\LanguageApi;
 use Monolog\Handler\StreamHandler;
 
@@ -12,11 +13,12 @@ use Monolog\Handler\StreamHandler;
  */
 class LanguageBatchBo
 {
+    use Constant;
 
     private $log;
-    private $applets;
+    public $applets;
+    public $applications;
     private $languageApi;
-    private $applications;
 
     /**
      * LanguageBatchBo constructor.
@@ -36,60 +38,69 @@ class LanguageBatchBo
         $this->log->pushHandler(new StreamHandler(dirname(__DIR__) . '/Log/error_language_batch_bo.log', Logger::ERROR));
     }
 
-
     /**
      * Starts the language file generation.
      */
     public function generateLanguageFiles()
     {
-        echo "Generating language files -> " . "[** APPLICATION: " . key($this->applications) . " **]<br>";
-        array_walk_recursive($this->applications, function ($language) {
-            echo "[** LANGUAGE: " . $language . " **]<br>";
-            $this->getStorage()->storeCacheFile(key($this->applications), $language)
-                ->storeFile(
-                    $this->
-                    getLanguageApi()->
-                    getLanguageFile(key($this->applications), $language)
-                );
-        });
-        echo "Language files have been generated successfully.<br>";
-        $this->log->info("Language files have been generated successfully.");
-    }
+        echo sprintf($this->GENERATE_LANG_FILES_START, key($this->applications));
 
+        array_walk_recursive($this->applications, function ($language) {
+            echo sprintf($this->GENERATE_LANG_FILES, $language);
+            $this->getStorage()->
+            storeCacheFile(key($this->applications), $language)->
+            storeFile(
+                $this->
+                getLanguageApi()->
+                getLanguageFile(key($this->applications), $language)
+            );
+        });
+
+        echo $this->GENERATE_LANG_FILES_END;
+        $this->log->info($this->GENERATE_LANG_FILES_END);
+    }
 
     /**
      * Gets the language files for the applet and puts them into the cache.
      */
     public function generateAppletLanguageXmlFiles()
     {
-        echo "Getting applet language XMLs...<br>";
+        echo $this->GENERATE_APP_FILES_START;
+
         array_walk_recursive($this->applets, function ($appletLanguageId, $appletDirectory) {
-            echo "** Getting " . $appletLanguageId . " -> " . $appletDirectory . " language XMLs**<br>";
+            echo sprintf($this->GENERATE_APP_GET_FILES, $appletLanguageId, $appletDirectory);
+
             $languages = $this->getLanguageApi()->getAppletLanguages($appletLanguageId);
+
             if (!$languages) {
-                throw new \Exception('There is no available languages for the ' . $appletLanguageId . ' applet.');
+                $this->log->error(sprintf($this->GENERATE_APP_LANG_EXCEPTION, $appletLanguageId));
+                throw new \Exception(sprintf($this->GENERATE_APP_LANG_EXCEPTION, $appletLanguageId));
             }
-            echo '** Available languages: [' . join(', ', $languages) . ']**<br>';
+
+            echo sprintf($this->GENERATE_APP_AVAILABLE_LANG, join(', ', $languages));
 
             foreach ($languages as $language) {
-                $this->getStorage()->storeAppletCacheFile($language)
-                    ->storeFile(
-                        $this->
-                        getLanguageApi()->
-                        getAppletLanguageFile($appletLanguageId, $language)
-                    );
-                echo "** Language xml cached successfully." . $appletLanguageId . "->" . $appletDirectory . "**<br>";
+                $this->getStorage()->
+                storeAppletCacheFile($language)->
+                storeFile(
+                    $this->
+                    getLanguageApi()->
+                    getAppletLanguageFile($appletLanguageId, $language)
+                );
+
+                echo sprintf($this->GENERATE_APP_SUCCESSFUL_LANG, $appletLanguageId, $appletDirectory);
             }
         });
 
-        echo "Applet language XML has been generated.<br>";
+        echo $this->GENERATE_APP_FILES_END;
+        $this->log->info($this->GENERATE_APP_FILES_END);
     }
 
 
     /**
      * @return Storage
      */
-    private function getStorage()
+    private function getStorage(): Storage
     {
         return $this->storage;
     }
@@ -97,7 +108,7 @@ class LanguageBatchBo
     /**
      * @return LanguageApi
      */
-    private function getLanguageApi()
+    public function getLanguageApi(): LanguageApi
     {
         return $this->languageApi;
     }
