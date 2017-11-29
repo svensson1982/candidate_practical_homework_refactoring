@@ -19,10 +19,11 @@ class LanguageApi
      */
     public function __construct()
     {
-        $reflection = new ReflectionClass(ApiCall::class);
-        $this->apiCallInstance = $reflection->newInstanceWithoutConstructor();
         //api errors
         $this->apiError = new ApiErrorResult();
+        //ApiCall without static
+        $reflection = new ReflectionClass(ApiCall::class);
+        $this->apiCallInstance = $reflection->newInstanceWithoutConstructor();
         //error log
         $this->log = new Logger('language_api');
         $this->log->pushHandler(new StreamHandler(dirname(dirname(__DIR__)) . '/Log/error_language_api.log', Logger::ERROR));

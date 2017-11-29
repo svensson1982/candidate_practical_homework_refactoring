@@ -47,7 +47,6 @@ class LanguageBatchBoTest extends \PHPUnit_Framework_TestCase
      */
     public function generateAppletLanguageXmlFiles()
     {
-        //call
         $this->languageBatchBo->generateAppletLanguageXmlFiles();
 
         $flash_path = Config::get('system.paths.root') . '/cache/flash';
