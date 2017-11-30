@@ -17,6 +17,7 @@ class LanguageApiTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @group langapi
      */
     public function setUp()
     {
@@ -27,9 +28,9 @@ class LanguageApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return array
      * @param $function
      * @param $language
-     * @return array
      */
     private function formatAsResultHelper($function, $language): array
     {
@@ -46,6 +47,7 @@ class LanguageApiTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @group langapi
      */
     public function getLanguageFileTest()
     {
@@ -53,8 +55,8 @@ class LanguageApiTest extends \PHPUnit_Framework_TestCase
         $application = $this->faker->domainWord;
         $language = $this->faker->languageCode;
 
-        $getLanguageFile = $this->languageApi->getLanguageFile($application, $language);
         $formatAsResult = $this->formatAsResultHelper('getLanguageFile', $language);
+        $getLanguageFile = $this->languageApi->getLanguageFile($application, $language);
 
         $this->assertNotEmpty($getLanguageFile);
         $this->assertInternalType('string', $getLanguageFile);
@@ -63,6 +65,7 @@ class LanguageApiTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @group langapi
      * Because the available language is en..
      */
     public function getAppletLanguagesTest()
@@ -70,20 +73,20 @@ class LanguageApiTest extends \PHPUnit_Framework_TestCase
         $getAppletLanguages = $this->languageApi->getAppletLanguages('en');
 
         $this->assertNotEmpty($getAppletLanguages);
-        $this->assertInternalType('array', $getAppletLanguages);
         $this->assertEquals($getAppletLanguages[0], 'en');
-
+        $this->assertInternalType('array', $getAppletLanguages);
     }
 
     /**
      * @test
+     * @group langapi
      * Because the available language is en..
      */
     public function getAppletLanguageFileTest()
     {
         $appletKey = key($this->languageBatchBo->applets);
-        $getAppletLanguageFile = $this->languageApi->getAppletLanguageFile($appletKey, 'en');
         $formatAsResult = $this->formatAsResultHelper('getAppletLanguageFile', 'en');
+        $getAppletLanguageFile = $this->languageApi->getAppletLanguageFile($appletKey, 'en');
 
         $this->assertNotEmpty($getAppletLanguageFile);
         $this->assertInternalType('string', $getAppletLanguageFile);

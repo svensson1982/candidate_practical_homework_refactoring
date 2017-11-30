@@ -48,8 +48,8 @@ class LanguageBatchBo
         array_walk_recursive($this->applications, function ($language) {
             echo sprintf($this->GENERATE_LANG_FILES, $language);
             $this->getStorage()->
-            storeCacheFile(key($this->applications), $language)->
-            storeFile(
+            storeCacheFile($this->PHP_FILE, key($this->applications), $language)->
+            save(
                 $this->
                 getLanguageApi()->
                 getLanguageFile(key($this->applications), $language)
@@ -81,8 +81,8 @@ class LanguageBatchBo
 
             foreach ($languages as $language) {
                 $this->getStorage()->
-                storeAppletCacheFile($language)->
-                storeFile(
+                storeAppletCacheFile($this->XML_FILE, $language)->
+                save(
                     $this->
                     getLanguageApi()->
                     getAppletLanguageFile($appletLanguageId, $language)

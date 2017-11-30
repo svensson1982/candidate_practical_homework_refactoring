@@ -1,11 +1,10 @@
 <?php
 namespace Language\Helper;
 
-use Language\Helper\StoreFile;
+use Language\Helper\SaveFile;
 
 class Storage
 {
-    use Constant;
 
     private $path;
 
@@ -19,21 +18,23 @@ class Storage
     }
 
     /**
+     * @param $pattern
      * @param $dir
      * @param $lang
-     * @return \Language\Helper\StoreFile
+     * @return SaveFile
      */
-    public function storeCacheFile($dir, $lang): StoreFile
+    public function storeCacheFile($pattern, $dir, $lang): SaveFile
     {
-        return new StoreFile($this->path . sprintf($this->PHP_FILE, $dir, $lang));
+        return new SaveFile($this->path . sprintf($pattern, $dir, $lang));
     }
 
     /**
+     * @param $pattern
      * @param $lang
-     * @return \Language\Helper\StoreFile
+     * @return \Language\Helper\SaveFile
      */
-    public function storeAppletCacheFile($lang): StoreFile
+    public function storeAppletCacheFile($pattern, $lang): SaveFile
     {
-        return new StoreFile($this->path . sprintf($this->XML_FILE, $lang));
+        return new SaveFile($this->path . sprintf($pattern, $lang));
     }
 }

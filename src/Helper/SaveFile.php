@@ -4,7 +4,7 @@ namespace Language\Helper;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-class StoreFile
+class SaveFile
 {
     use Constant;
 
@@ -25,7 +25,7 @@ class StoreFile
     /**
      * @param $data
      */
-    public function storeFile($data)
+    public function save($data)
     {
         $directory = dirname($this->fileName);
         if (!is_dir($directory)) {
@@ -33,7 +33,7 @@ class StoreFile
         }
 
         try {
-            $this->createFile($data);
+            $this->create($data);
         } catch (\Exception $e) {
             echo '<pre>' . $e->getMessage() . '</pre>';
             $this->log->error(sprintf($this->STORE_FILE_ERROR, $this->fileName, $directory));
@@ -44,7 +44,7 @@ class StoreFile
      * @param $data
      * @throws \Exception
      */
-    private function createFile($data)
+    private function create($data)
     {
         if (strlen($data) !== file_put_contents($this->fileName, $data)) {
             throw new \Exception(sprintf($this->CREATE_FILE_ERROR, $this->fileName));
